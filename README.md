@@ -1,3 +1,6 @@
+
+--We got started with the wrong starter code, gave us some trouble.
+
 ## Shopping List Starter
 
 Created for the Thinkful EI Program.

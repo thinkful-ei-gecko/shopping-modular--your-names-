@@ -5,36 +5,66 @@
 // eslint-disable-next-line no-unused-vars
 const shoppingList = (function(){
 
+  // function generateItemElement(item) {
+  //   let itemTitle = `<span class="shopping-item shopping-item__checked">${item.name}</span>`;
+  //   if (!item.checked) {
+  //     itemTitle = `
+  //       <form class="js-edit-item">
+  //         <input class="shopping-item" type="text" value="${item.name}" />
+  //       </form>
+  //     `;
+  //   }
+  //   return `
+  //     <li class="js-item-element" data-item-id="${item.id}">
+  //       ${itemTitle}
+  //       <div class="shopping-item-controls">
+  //         <button class="shopping-item-toggle js-item-toggle">
+  //           <span class="button-label">check</span>
+  //         </button>
+  //         <button class="shopping-item-delete js-item-delete">
+  //           <span class="button-label">delete</span>
+  //         </button>
+  //         <button class="shopping-item-edit js-item-edit">
+  //         <span class="button-label">edit</span>
+  //       </button>
+  //       </div>
+  //     </li>`;
+  // }
+
   function generateItemElement(item) {
-    let itemTitle = `<span class="shopping-item shopping-item__checked">${item.name}</span>`;
-    if (!item.checked) {
+    const checkedClass = item.checked ? 'shopping-item__checked' : '';
+    const editBtnStatus = item.checked ? 'disabled' : '';
+
+    let itemTitle = `<span class="shopping-item ${checkedClass}">${item.name}</span>`;
+    if (item.isEditing) {
       itemTitle = `
         <form class="js-edit-item">
-          <input class="shopping-item" type="text" value="${item.name}" />
+          <input class="shopping-item type="text" value="${item.name}" />
         </form>
       `;
     }
-  
+
     return `
-      <li class="js-item-element" data-item-id="${item.id}">
-        ${itemTitle}
-        <div class="shopping-item-controls">
-          <button class="shopping-item-toggle js-item-toggle">
-            <span class="button-label">check</span>
-          </button>
-          <button class="shopping-item-delete js-item-delete">
-            <span class="button-label">delete</span>
-          </button>
-        </div>
-      </li>`;
-  }
-  
+    <li class="js-item-element" data-item-id="${item.id}">
+      ${itemTitle}
+      <div class="shopping-item-controls">
+        <button class="shopping-item-edit js-item-edit" ${editBtnStatus}>
+          <span class="button-label">edit</span>
+        </button>
+        <button class="shopping-item-toggle js-item-toggle">
+          <span class="button-label">check</span>
+        </button>
+        <button class="shopping-item-delete js-item-delete">
+          <span class="button-label">delete</span>
+        </button>
+      </div>
+    </li>`;
+}
   
   function generateShoppingItemsString(shoppingList) {
     const items = shoppingList.map((item) => generateItemElement(item));
     return items.join('');
   }
-  
   
   function render() {
     // Filter item list if store prop is true by item.checked === false
@@ -120,6 +150,7 @@ const shoppingList = (function(){
       const id = getItemIdFromElement(event.currentTarget);
       const itemName = $(event.currentTarget).find('.shopping-item').val();
       store.findAndUpdateName(id, itemName);
+      store.setItemIsEditing(id, false);
       render();
     });
   }
@@ -138,6 +169,14 @@ const shoppingList = (function(){
       render();
     });
   }
+
+function handleItemStartEditing() {
+    $('.js-shopping-list').on('click', '.js-item-edit', event => {
+      const id = getItemIdFromElement(event.target);
+      store.setItemIsEditing(id, true);
+      render();
+    });
+}
   
   function bindEventListeners() {
     handleNewItemSubmit();
@@ -146,6 +185,7 @@ const shoppingList = (function(){
     handleEditShoppingItemSubmit();
     handleToggleFilterClick();
     handleShoppingListSearch();
+    handleItemStartEditing();
   }
 
   // This object contains the only exposed methods from this module:
