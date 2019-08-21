@@ -12,7 +12,7 @@ const store = (function () {
   let searchTerm = '';
 
   let findById = function(id) {
-    return this.items.find(item => item.id === id);
+    return this.find(item => item.id === id);
   };
 
   let addItem = function(name) {
@@ -27,13 +27,14 @@ const store = (function () {
   };
 
   let findAndToggleChecked = function(id) {
-    const idNumber = this.items.findById(); //gives us the ID
+    console.log(this);
+    const idNumber = findById(id); //gives us the ID
     idNumber.checked = !idNumber.checked;
   };
 
   let findAndUpdateName = function(id, newName) {
     try {
-      const idNumber = this.items.findById();
+      const idNumber = this.items.findById(id);
       Item.validateName(newName);
       idNumber.name = newName;
     }
