@@ -9,3 +9,6 @@ function main() {
 }
 
 $(main);
+
+console.log(Item);
+console.log(foo);
