@@ -12,14 +12,14 @@ const store = (function () {
   let searchTerm = '';
 
   let findById = function(id) {
-    store.items.find(item => item.id === id);
+    return this.items.find(item => item.id === id);
   };
 
   let addItem = function(name) {
     try {
       Item.validateName(name);
       Item.create(name);
-      store.items.push({ id: cuid(), name: name, checked: false });
+      this.items.push({ id: cuid(), name: name, checked: false });
     }
     catch(error) {
       console.log(`Cannot add item: ${error.message} for now.`);
@@ -27,13 +27,13 @@ const store = (function () {
   };
 
   let findAndToggleChecked = function(id) {
-    const idNumber = this.findById(); //gives us the ID
+    const idNumber = this.items.findById(); //gives us the ID
     idNumber.checked = !idNumber.checked;
   };
 
   let findAndUpdateName = function(id, newName) {
     try {
-      const idNumber = this.findById();
+      const idNumber = this.items.findById();
       Item.validateName(newName);
       idNumber.name = newName;
     }
@@ -43,10 +43,9 @@ const store = (function () {
   };
 
   let findAndDelete = function(id) {
-    const index = this.items.findIndex(item => item.id === id); // { id: cuid(), name: 'apples', checked: false }
-    store.items.splice(index, 1);
+    const index = this.items.findIndex(item => item); // { id: cuid(), name: 'apples', checked: false }
+    this.items.splice(index, 1);
   };
-
 
   return {
     items,
