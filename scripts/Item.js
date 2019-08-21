@@ -7,6 +7,7 @@ const Item = (function(){
     if (!name) {
       throw new TypeError('Name does not exist');
     }
+    console.log('this is working');
   }
   
   function create(name) {
